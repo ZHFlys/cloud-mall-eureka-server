@@ -10,10 +10,7 @@ import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 
@@ -105,7 +102,20 @@ public class UserController {
             return ApiRestResponse.error(ZhMallExceptionEnum.NEED_ADMIN);
         }
         session.setAttribute(Constant.ZH_MALL_USER, user);
-        user.setPassword(null);//防止对方分析密码
+        //防止对方分析密码
+        user.setPassword(null);
         return ApiRestResponse.success(user);
+    }
+
+    /**
+     *
+     * @param user
+     * @return 校验是否是管理员
+     * @throws ZhMallException
+     */
+    @PostMapping("/checkAdminRole")
+    @ResponseBody
+    public Boolean checkAdminRole(@RequestBody User user) throws ZhMallException {
+        return userService.checkAdminRole(user);
     }
 }
